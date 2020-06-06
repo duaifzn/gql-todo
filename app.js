@@ -3,6 +3,11 @@ const app = express()
 const port = process.env.PORT || 3000
 const graphqlHTTP = require('express-graphql')
 const { makeExecutableSchema } = require('graphql-tools');
+const cookieParser = require("cookie-parser")
+const jwt = require("jsonwebtoken")
+if (process.env.NODE_ENV !== 'production') {
+  require('dotenv').config()
+}
 
 const mongoose = require('mongoose')
 mongoose.connect('mongodb://localhost/gql', { useNewUrlParser: true, useUnifiedTopology: true })
@@ -14,10 +19,29 @@ const typeDefs = require('./qraphql/types/index')
 const resolvers = require('./qraphql/resolvers/index')
 const schema = makeExecutableSchema({ typeDefs: typeDefs, resolvers: resolvers })
 
+app.use(cookieParser())
+
+app.use((req, res, next) => {
+  const accessToken = req.cookies['access-token']
+  let data
+  try {
+    data = jwt.verify(accessToken, process.env.JWT_SECRET)
+  } catch (err) {
+    req.isAuth = false
+    return next()
+  }
+  if (!data) {
+    req.isAuth = false
+    return next()
+  }
+  req.isAuth = true
+  req.userId = data.userId
+  next()
+})
 
 app.use('/graphql', graphqlHTTP({
   schema: schema,
-  graphiql: true
+  graphiql: true,
 }),
 );
 

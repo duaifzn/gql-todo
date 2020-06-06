@@ -2,8 +2,11 @@ const User = require('../../models/user')
 const Todo = require('../../models/todo')
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
-const SECRET = 'asd123'
+const SECRET = process.env.JWT_SECRET
 
+//parent: 上一層
+//args: 輸入的參數
+//context: 無設定context時為req
 module.exports = {
   User: {
     todos: (parent, args, context) => {
@@ -15,6 +18,9 @@ module.exports = {
       return User.findById(args.id)
     },
     users: (parent, args, context) => {
+      if (context.isAuth === false) {
+        throw new Error("false auth")
+      }
       return User.find({})
     },
 
@@ -36,13 +42,14 @@ module.exports = {
         })
     },
 
-    login: (parent, args, context) => {
+    login: (parent, args, { res }) => {
       return User.findOne({ email: args.email })
         .then(user => {
           if (!user) throw new Error('email not found')
           const valid = bcrypt.compareSync(args.password, user.password)
           if (!valid) throw new Error('passeord incorrect')
-          const createToken = jwt.sign({ email: user.email }, SECRET, { expiresIn: '1d' })
+          const createToken = jwt.sign({ userId: user.id }, SECRET, { expiresIn: '1d' })
+          res.cookie("access-token", createToken)
           return { token: createToken }
         })
     }
