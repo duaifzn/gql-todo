@@ -18,7 +18,7 @@ module.exports = {
       return User.findById(args.id)
     },
     users: (parent, args, context) => {
-      if (context.isAuth === false) {
+      if (!context.isAuth) {
         throw new Error("false auth")
       }
       return User.find({})
@@ -52,6 +52,17 @@ module.exports = {
           res.cookie("access-token", createToken)
           return { token: createToken }
         })
+    },
+
+    addTodo: (parent, args, context) => {
+      if (!context.isAuth) {
+        throw new Error("false auth")
+      }
+      const todo = new Todo({
+        name: args.name,
+        userId: context.userId
+      })
+      return todo.save()
     }
   }
 
