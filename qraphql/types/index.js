@@ -16,15 +16,14 @@ type Token{
 }
 
 type Query{
-  user(id: ID!): User
+  user: User
   users: [User]
 }
 
 type Mutation{
   signUp(name: String!, email: String!, password: String!, password2: String!): User
-
   login(email: String!, password: String!):Token
-
   addTodo(name: String!): Todo
+  deleteTodo(id: String!):User
 }
 `

@@ -15,15 +15,17 @@ module.exports = {
   },
   Query: {
     user: (parent, args, context) => {
-      return User.findById(args.id)
+      if (!context.isAuth) {
+        throw new Error("false auth")
+      }
+      return User.findById(context.userId)
     },
     users: (parent, args, context) => {
       if (!context.isAuth) {
         throw new Error("false auth")
       }
       return User.find({})
-    },
-
+    }
   },
   Mutation: {
     signUp: (parent, args, context) => {
@@ -63,7 +65,21 @@ module.exports = {
         userId: context.userId
       })
       return todo.save()
+    },
+
+    deleteTodo: (parent, args, context) => {
+      if (!context.isAuth) {
+        throw new Error("false auth")
+      }
+
+      return Todo.deleteOne({ _id: args.id }).catch(err => {
+        throw new Error(err)
+      }).then(() => {
+        return User.findOne({ _id: context.userId })
+      })
+
+
     }
-  }
+  },
 
 }
