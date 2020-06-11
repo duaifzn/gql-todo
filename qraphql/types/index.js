@@ -9,6 +9,7 @@ type User{
 type Todo{
   id: ID!
   name: String!
+  done: Boolean!
 }
 
 type Token{
@@ -25,5 +26,6 @@ type Mutation{
   login(email: String!, password: String!):Token
   addTodo(name: String!): Todo
   deleteTodo(id: String!):User
+  todoDone(id: String!): Todo
 }
 `

@@ -79,6 +79,14 @@ module.exports = {
       })
 
 
+    },
+    todoDone: async (parent, args, context) => {
+      if (!context.isAuth) {
+        throw new Error("false auth")
+      }
+      const todo = await Todo.findOne({ _id: args.id })
+      await Todo.updateOne({ _id: args.id }, { done: !todo.done })
+      return Todo.findOne({ _id: args.id })
     }
   },
 

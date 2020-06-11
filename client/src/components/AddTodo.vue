@@ -12,7 +12,10 @@
     <div class="todo-list">
       <div v-for="todo in todos" :key="todo.id" class="mt-2">
         <b-row>
-          <b-col cols="10">{{todo.name}}</b-col>
+          <b-col cols="2">
+            <input type="checkbox" v-model="todo.done" @click="todoDone(todo.id)" />
+          </b-col>
+          <b-col cols="8" class="todoName" :class="{done: todo.done}">{{todo.name}}</b-col>
           <b-col cols="2">
             <b-icon icon="x" class="btnDelete" @click="deleteTodo(todo.id)"></b-icon>
           </b-col>
@@ -41,6 +44,7 @@ export default {
               todos {
                 id
                 name
+                done
               }
             }
           }
@@ -61,6 +65,7 @@ export default {
               addTodo(name: $name) {
                 id
                 name
+                done
               }
             }
           `,
@@ -80,7 +85,7 @@ export default {
           console.error(err);
         });
     },
-    async deleteTodo(id) {
+    async deleteTodo(ID) {
       // Call to the graphql mutation
       await this.$apollo
         .mutate({
@@ -97,10 +102,31 @@ export default {
           `,
           // Parameters
           variables: {
-            id: id
+            id: ID
           }
         })
         .then(() => {
+          this.$apollo.queries.todos.refetch();
+        });
+    },
+    async todoDone(ID) {
+      await this.$apollo
+        .mutate({
+          mutation: gql`
+            mutation($id: String!) {
+              todoDone(id: $id) {
+                id
+                name
+                done
+              }
+            }
+          `,
+          variables: {
+            id: ID
+          }
+        })
+        .then(data => {
+          console.log(data);
           this.$apollo.queries.todos.refetch();
         });
     }
@@ -112,6 +138,9 @@ export default {
 #todo {
   border-radius: 20px;
 }
+.todoName {
+  text-align: left;
+}
 button {
   border-radius: 20px;
 }
@@ -121,5 +150,8 @@ button {
   color: red;
   font-size: 15px;
   cursor: pointer;
+}
+.done {
+  text-decoration: line-through;
 }
 </style>
