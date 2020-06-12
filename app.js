@@ -11,7 +11,8 @@ if (process.env.NODE_ENV !== 'production') {
 }
 
 const mongoose = require('mongoose')
-mongoose.connect('mongodb://localhost/gql', { useNewUrlParser: true, useUnifiedTopology: true })
+mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost/gql', { useNewUrlParser: true, useUnifiedTopology: true })
+
 const db = mongoose.connection
 db.on('error', error => { console.error(error) })
 db.once('open', () => { console.log('connected to mongoDB') })
@@ -23,8 +24,8 @@ app.use(cors())
 app.use(cookieParser())
 
 app.use((req, res, next) => {
-  //const accessToken = req.cookies['access-token']
-  const accessToken = req.headers['access-token']
+  const accessToken = req.cookies['access-token']
+  //const accessToken = req.headers['access-token']
   //console.log(accessToken)
   let data
   try {
@@ -52,3 +53,8 @@ app.use('/graphql', graphqlHTTP({
 app.listen(port, () => {
   console.log(`server running`)
 })
+
+
+
+
+
