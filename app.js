@@ -20,7 +20,13 @@ db.once('open', () => { console.log('connected to mongoDB') })
 const typeDefs = require('./qraphql/types/index')
 const resolvers = require('./qraphql/resolvers/index')
 const schema = makeExecutableSchema({ typeDefs: typeDefs, resolvers: resolvers })
-app.use(cors())
+app.use(cors({
+  origin: function (origin, callback) {
+    return callback(null, true);
+  },
+  optionsSuccessStatus: 200,
+  credentials: true
+}))
 app.use(cookieParser())
 
 app.use((req, res, next) => {

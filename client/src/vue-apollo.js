@@ -4,7 +4,7 @@ import { HttpLink } from 'apollo-link-http'
 import { InMemoryCache } from 'apollo-cache-inmemory'
 import VueApollo from 'vue-apollo'
 import VueCookies from 'vue-cookies'
-import fetch from 'node-fetch'
+//import fetch from 'node-fetch'
 // Install the Vue plugin
 Vue.use(VueApollo)
 Vue.use(VueCookies)
@@ -12,19 +12,20 @@ Vue.use(VueCookies)
 const AUTH_TOKEN = 'access-token'
 
 
-const getHeaders = () => {
-  const headers = {};
-  const token = Vue.$cookies.get(AUTH_TOKEN);
-  if (token) {
-    headers[AUTH_TOKEN] = `${token}`;
-  }
-  return headers;
-};
+// const getHeaders = () => {
+//   const headers = {};
+//   const token = Vue.$cookies.get(AUTH_TOKEN);
+//   if (token) {
+//     headers[AUTH_TOKEN] = `${token}`;
+//   }
+//   return headers;
+// };
 
 const httpLink = new HttpLink({
-  uri: "http://localhost:3000/graphql",
-  fetch,
-  headers: getHeaders()
+  uri: 'http://localhost:3000/graphql',
+  //fetch,
+  credentials: 'include',
+  //headers: getHeaders()
 })
 
 // Create the apollo client
@@ -37,7 +38,7 @@ const apolloClient = new ApolloClient({
 
 
 export const apolloProvider = new VueApollo({
-  defaultClient: apolloClient
+  defaultClient: apolloClient,
 })
 
 // Manually call this when user log in
