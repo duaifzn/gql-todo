@@ -22,7 +22,7 @@ const AUTH_TOKEN = 'access-token'
 // };
 
 const httpLink = new HttpLink({
-  uri: 'http://localhost:3000/graphql',
+  uri: 'https://gql-todo123.herokuapp.com/graphql',
   //fetch,
   credentials: 'include',
   //headers: getHeaders()
