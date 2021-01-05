@@ -14,7 +14,7 @@ spec:
     spec:
       containers: 
       - name: gql-todo-app
-        image: gcr.io/gqltodo/gqltodo:v1.1
+        image: gcr.io/gqltodo/gqltodo:v1.2
         ports: 
         - containerPort: 3000
         env:
@@ -30,6 +30,7 @@ metadata:
 spec:
   selector:
     app: gql-todo-k8s
+  type: LoadBalancer
   ports:
   - protocol: TCP
     port: 8081
