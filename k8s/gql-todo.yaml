@@ -12,14 +12,28 @@ spec:
       labels: 
         app: gql-todo
     spec:
-      container: 
+      containers: 
       - name: gql-todo-app
-        image: gcr.io/gqltodo/gqltodo:v1.0
+        image: gcr.io/gqltodo/gqltodo:v1.1
         ports: 
         - containerPort: 3000
         env:
         - name: PORT
           value: "3000"
-      
+        - name: MONGODB_URI
+          value: "mongodb://mongodb-service:27017/gql"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: gql-todo-k8s-service
+spec:
+  selector:
+    app: gql-todo-k8s
+  ports:
+  - protocol: TCP
+    port: 8081
+    targetPort: 3000
+
 
 
