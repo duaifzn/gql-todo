@@ -7,7 +7,7 @@
 - 可增加及刪除該帳號的 todo list
 
 ## link
-- [graphql後台](https://gql-todo123.herokuapp.com/graphql)
+- [graphql後台](http://35.234.0.226:8081/graphql)
 
 
 
