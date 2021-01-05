@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata: 
+  name: gql-todo-k8s
+spec: 
+  replicas: 1
+  selector: 
+    matchLabel:
+      app: gql-todo
+  template:
+    metadata:
+      labels: 
+        app: gql-todo
+    spec:
+      container: 
+      - name: gql-todo-app
+        image: gcr.io/gqltodo/gqltodo:v1.0
+        ports: 
+        - containerPort: 3000
+        env:
+        - name: PORT
+          value: "3000"
+      
+
+
