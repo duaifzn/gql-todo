@@ -1,7 +1,7 @@
 const express = require("express")
 const app = express()
 const port = process.env.PORT || 3000
-const graphqlHTTP = require('express-graphql')
+const {graphqlHTTP} = require('express-graphql')
 const cors = require('cors')
 const { makeExecutableSchema } = require('graphql-tools');
 const cookieParser = require("cookie-parser")
@@ -9,9 +9,9 @@ const jwt = require("jsonwebtoken")
 if (process.env.NODE_ENV !== 'production') {
   require('dotenv').config()
 }
-
+console.log("mongodburi: " + process.env.MONGODB_URI)
 const mongoose = require('mongoose')
-mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost/gql', { useNewUrlParser: true, useUnifiedTopology: true })
+mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost/gql',{ useNewUrlParser: true, useUnifiedTopology: true })
 
 const db = mongoose.connection
 db.on('error', error => { console.error(error) })
