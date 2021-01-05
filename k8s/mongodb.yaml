@@ -4,7 +4,7 @@ metadata:
   name: mongodb-deployment
 spec:
   replicas: 1
-  matchLabel:
+  matchLabels:
     app: mongodb
   template:
     metadata:
