@@ -3,4 +3,5 @@ kind: ConfigMap
 metadata:
   name: mongo-configmap
 data:
-  database_url: mongodb-service
+  mongodb_uri: mongodb://mongodb-service:27017/gql
+  mongodb_host: mongodb-service
